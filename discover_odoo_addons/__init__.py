@@ -8,7 +8,7 @@ import logging
 import operator
 import sys
 
-from .utils import OdooAddon, find_addons, is_installable
+from .utils import OdooAddon, find_addons, is_installable, parse_names
 
 try:
     from itertools import filterfalse
@@ -66,7 +66,7 @@ def main(argv=None):
     excluded = set()
     if args.exclude:
         for string in args.exclude:
-            excluded |= set(utils.parse_names(string))
+            excluded |= set(parse_names(string))
 
     if excluded:
         LOG.info('Excluding addons: %s', ', '.join(excluded))
@@ -92,4 +92,5 @@ __all__ = [
     'find_addons',
     'is_installable',
     'main',
+    'parse_names',
 ]
