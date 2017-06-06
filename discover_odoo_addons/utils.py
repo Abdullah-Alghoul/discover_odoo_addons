@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import ast
-import collections
 import os
 
 
-# OdooAddon = collections.namedtuple(
-    # 'OdooAddon', ['name', 'manifest_filename'])
 MANIFEST_NAMES = frozenset([
     '__manifest__',
     '__odoo__',
