@@ -38,7 +38,7 @@ class OdooAddon(object):
         return self._installable
 
 
-def find_addons(addon_dir, follow_links=True, manifest_names=MANIFEST_NAMES):
+def find_addons(addon_dir, follow_links=False, manifest_names=MANIFEST_NAMES):
     manifest_filenames = frozenset('{0}.py'.format(n) for n in manifest_names)
     for dirpath, _, filenames in os.walk(addon_dir, followlinks=follow_links):
         filenames = set(filenames)

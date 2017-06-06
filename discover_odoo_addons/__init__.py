@@ -50,6 +50,12 @@ def get_parser():
         help='addon attribute to print. Choices: %(choices)s. '
              'Default: %(default)s.',
     )
+    parser.add_argument(
+        '-l', '--follow-links',
+        action='store_true',
+        help='follow symbolic links when searching for addons '
+             '(if OS supports it).',
+    )
     return parser
 
 
@@ -61,7 +67,8 @@ def main(argv=None):
 
     found_addons = set()
     for addon_dir in args.addon_dir:
-        found_addons |= set(find_addons(addon_dir))
+        found_addons |= set(find_addons(
+            addon_dir, follow_links=args.follow_links))
 
     excluded = set()
     if args.exclude:
