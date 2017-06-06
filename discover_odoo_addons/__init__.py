@@ -4,12 +4,16 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import argparse
-import itertools
 import logging
 import operator
 import sys
 
 from .utils import OdooAddon, find_addons, is_installable
+
+try:
+    from itertools import filterfalse
+except ImportError:
+    from itertools import ifilterfalse as filterfalse
 
 
 __version__ = '0.1dev'
@@ -69,7 +73,7 @@ def main(argv=None):
         found_addons = {a for a in found_addons if a.name not in excluded}
 
     if not args.show_not_installable:
-        not_installable = set(itertools.filterfalse(
+        not_installable = set(filterfalse(
             lambda a: a.installable, found_addons))
         if not_installable:
             LOG.info(
