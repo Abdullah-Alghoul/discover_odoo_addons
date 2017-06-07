@@ -1,7 +1,14 @@
 [run]
 source = discover_odoo_addons
 
-omit =
+[report]
+omit = tests
+
+exclude_lines =
     __repr__
     pragma: no cover
     if PY3:
+    raise AssertionError
+    raise NotImplementedError
+    if 0:
+    if __name__ == .__main__.:
