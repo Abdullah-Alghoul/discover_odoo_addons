@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import ast
-import operator
 import os
 import sys
 
-_get_name = operator.attrgetter('name')
 PY3 = sys.version_info.major == 3
 MANIFEST_NAMES = frozenset([
     '__manifest__',
