@@ -1,0 +1,6 @@
+[run]
+source = discover_odoo_addons
+
+omit =
+    __repr__
+    pragma: no cover
