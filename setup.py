@@ -4,8 +4,25 @@
 import io
 import os
 import re
+import shlex
+import sys
 
 from setuptools import find_packages, setup
+from setuptools.command.test import test as TestCommand
+
+
+class PyTest(TestCommand):
+    user_options = [('pytest-args=', 'a', 'Arguments to pass to pytest')]
+
+    def initialize_options(self):
+        TestCommand.initialize_options(self)
+        self.pytest_args = ''
+
+    def run_tests(self):
+        # Import here, cause outside the eggs aren't loaded.
+        import pytest
+        errno = pytest.main(shlex.split(self.pytest_args))
+        sys.exit(errno)
 
 
 def read(*names, **kwargs):
@@ -35,7 +52,8 @@ requirements = [
 ]
 
 test_requirements = [
-    'pytest',
+    'pytest>=3.0.0',
+    'pytest-cov>=2.0.0',
 ]
 
 setup(
@@ -64,6 +82,9 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
     ],
+    cmdclass={
+        'test': PyTest,
+    },
     test_suite='tests',
     tests_require=test_requirements,
     entry_points={
