@@ -8,18 +8,16 @@ import logging
 import operator
 import sys
 
-from .utils import OdooAddon, find_addons, is_installable, parse_names
-
-try:
-    from itertools import filterfalse
-except ImportError:
-    from itertools import ifilterfalse as filterfalse
-
+from .utils import (
+    OdooAddon,
+    discover_addons,
+    walk_addons,
+    is_installable,
+    parse_names,
+)
 
 __version__ = '0.1dev'
 LOG = logging.getLogger(__name__)
-get_name = operator.attrgetter('name')
-get_path = operator.attrgetter('addon_path')
 
 
 def get_parser():
@@ -65,39 +63,27 @@ def main(argv=None):
     logging.basicConfig(level=logging.INFO)
     args = get_parser().parse_args(argv)
 
-    found_addons = set()
-    for addon_dir in args.addon_dir:
-        found_addons |= set(find_addons(
-            addon_dir, follow_links=args.follow_links))
-
     excluded = set()
     if args.exclude:
         for string in args.exclude:
             excluded |= set(parse_names(string))
-
-    if excluded:
         LOG.info('Excluding addons: %s', ', '.join(excluded))
-        found_addons = {a for a in found_addons if a.name not in excluded}
 
-    if not args.show_not_installable:
-        not_installable = set(filterfalse(
-            lambda a: a.installable, found_addons))
-        if not_installable:
-            LOG.info(
-                'Found not installable addons: %s', ', '.join(
-                    map(get_name, not_installable)))
-            found_addons -= not_installable
-    getters = {
-        'name': get_name,
-        'path': get_path,
-    }
-    print(args.separator.join(map(getters[args.print], found_addons)))
+    addons = discover_addons(
+        args.addon_dir,
+        excluded=excluded,
+        follow_links=args.follow_links,
+        show_all=args.show_not_installable,
+    )
+
+    print(args.separator.join(map(operator.attrgetter(args.print), addons)))
 
 
 __all__ = [
     'OdooAddon',
-    'find_addons',
+    'discover_addons',
     'is_installable',
     'main',
     'parse_names',
+    'walk_addons',
 ]
