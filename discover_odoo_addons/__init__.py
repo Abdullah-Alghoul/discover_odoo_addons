@@ -17,12 +17,23 @@ from .utils import (
 )
 
 __version__ = '0.1dev'
+__description__ = 'Find Odoo addons in a directory'
 LOG = logging.getLogger(__name__)
 
 
 def get_parser():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('addon_dir', nargs='*', default='.')
+    parser = argparse.ArgumentParser(description=__description__)
+    parser.add_argument(
+        '--version',
+        action='version',
+        version='%(prog)s {0}'.format(__version__),
+    )
+    parser.add_argument(
+        'addon_dirs',
+        metavar='ADDON_DIR',
+        nargs='*',
+        default='.',
+    )
     parser.add_argument(
         '-a', '--all',
         dest='show_not_installable',
@@ -70,7 +81,7 @@ def main(argv=None):
         LOG.info('Excluding addons: %s', ', '.join(excluded))
 
     addons = discover_addons(
-        args.addon_dir,
+        args.addon_dirs,
         excluded=excluded,
         follow_links=args.follow_links,
         show_all=args.show_not_installable,
