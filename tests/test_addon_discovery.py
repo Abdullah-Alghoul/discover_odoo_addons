@@ -8,6 +8,7 @@ from discover_odoo_addons import (
     OdooAddon,
     discover_addons,
     is_installable,
+    main,
     parse_names,
     walk_addons,
 )
@@ -61,3 +62,20 @@ def test_OdooAddon(repo):
     assert str(addon2) == addon2_name
 
     assert addon1.manifest_path == os.path.join(addon1_path, '__manifest__.py')
+
+
+@pytest.mark.parametrize('args, expected_addons', [
+    ([], ['simple']),
+    (['--exclude', 'simple'], []),
+    (['--all'], ['simple', 'not_installable_addon']),
+])
+def test_main_prints_module_names(args, expected_addons, repo, capfd):
+    args.extend([
+        '--separator',
+        '\n',
+        repo,
+    ])
+    main(args)
+    out, _ = capfd.readouterr()
+    addons = out.strip().splitlines()
+    assert sorted(addons) == sorted(expected_addons)
