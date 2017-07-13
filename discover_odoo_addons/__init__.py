@@ -43,7 +43,7 @@ def get_parser():
     parser.add_argument(
         '-e', '--exclude',
         action='append',
-        help='comma-separated list of addons to exclude.'
+        help='comma-separated list of addons to exclude. '
              'Can be used multiple times.',
     )
     parser.add_argument(
